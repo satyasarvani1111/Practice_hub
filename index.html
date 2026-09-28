@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Hub</title>
+<style>
+:root{--brown:#8b4f28;--dark:#5d321c;--cream:#f7efe5;--line:#e4d5c5;--soft:#fffaf4;--green:#2e8b57}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:#3f2b20;font-family:Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.page{min-height:100vh}.login{min-height:100vh;display:grid;place-items:center;padding:30px}
+.login-card{width:min(620px,94vw);background:#fffdf9;border:1px solid var(--line);border-radius:22px;padding:42px;box-shadow:0 18px 50px #6a43251f}
+.brand{text-align:center;font:42px Georgia,serif;color:var(--dark)}.tag{text-align:center;color:#8a7666;margin:7px 0 35px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:#806b5c;text-transform:uppercase}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.role{padding:18px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:center;font-size:17px}.role.active{background:#ead5be;border-color:#c18a58}
+label{display:block;font-weight:700;margin:14px 0 7px}input,select{width:100%;padding:13px;border:1px solid #d9c9b8;border-radius:9px;background:white}
+.btn{border:1px solid var(--line);background:white;padding:10px 15px;border-radius:9px;color:#4d3527}.btn.primary{background:var(--brown);color:white;border-color:var(--brown)}.btn.danger{color:#a52f22}.btn.small{padding:7px 10px;font-size:13px}
+.login .primary{width:100%;margin-top:18px;font-size:17px;padding:14px}.help{text-align:center;color:#8a7666;font-size:13px;margin-top:14px}
+.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.side{background:var(--dark);color:white;padding:24px 16px}.side .brand2{font:28px Georgia,serif;margin:10px 0 35px}.nav button{width:100%;text-align:left;background:transparent;color:white;border:0;padding:13px;border-radius:8px;margin:3px 0}.nav button.active,.nav button:hover{background:#7a4528}.logout{position:absolute;bottom:20px;left:16px;width:213px}
+.main{background:#fbf5ee;min-height:100vh}.top{height:76px;background:white;border-bottom:1px solid var(--line);padding:18px 28px;display:flex;justify-content:space-between;align-items:center}.top h2{margin:0;font:25px Georgia,serif}.content{padding:30px;max-width:1250px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0}.action{background:white;border:1px solid var(--line);border-radius:13px;padding:20px;cursor:pointer}.action strong{display:block;font-size:17px;margin:8px 0}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;margin:15px 0}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{display:flex;justify-content:space-between;gap:15px;align-items:center}.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:12px}.published{background:#e2f2e7;color:#277546}.private{background:#eee;color:#666}
+.folder{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0;background:#fff;transition:.15s}.folder.dragging{opacity:.45}.folder.drag-over{border:2px dashed var(--brown);background:#fff8ef}.folder-head{display:flex;align-items:center;justify-content:space-between;gap:15px}.folder-name{font-weight:800;font-size:17px}.drag-handle{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin-right:8px;border:1px solid var(--line);border-radius:8px;background:#fffaf4;color:#806b5c;font-size:18px;cursor:grab;user-select:none;vertical-align:middle}.drag-handle:active{cursor:grabbing}.video-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border-top:1px solid #eee4da;padding:13px 0}.video-row:first-child{margin-top:10px}.muted{color:#887466;font-size:13px}
+.modal{position:fixed;inset:0;background:#0007;display:grid;place-items:center;padding:20px;z-index:20}.modal-card{width:min(1150px,96vw);max-height:94vh;overflow:auto;background:#fffaf4;border-radius:16px;padding:20px}.test-grid{display:grid;grid-template-columns:220px 1fr 280px;gap:16px}.list-panel,.control-panel,.player-panel{background:white;border:1px solid var(--line);border-radius:12px;padding:15px}.list-btn{width:100%;text-align:left;border:1px solid var(--line);background:white;padding:10px;border-radius:8px;margin:4px 0}.list-btn.active{background:#ead5be}.video-box{background:#111;border-radius:10px;aspect-ratio:210/297;display:grid;place-items:center;overflow:hidden}.video-box video{width:100%;height:100%;object-fit:contain}.transport{display:flex;gap:7px;align-items:center;margin-top:10px}.transport input{padding:0}.control-group{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}.seg{display:flex;gap:7px;flex-wrap:wrap}.seg button{padding:10px 12px;border:1px solid var(--line);background:white;border-radius:8px}.seg button.active{background:var(--brown);color:white}.transpose-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}.transpose-grid button{padding:8px 4px;font-size:12px}.transpose-grid button.active{background:var(--brown);color:white}.notice{padding:11px;border-radius:9px;background:#f5eadf;color:#6c5748;margin-top:10px}
+#studentVideoBox{aspect-ratio:auto;max-height:70vh}
+#studentVideo{width:100%;height:auto;max-height:70vh;object-fit:contain;display:block}
+.student-wrap{padding:25px}.student-grid{display:grid;grid-template-columns:220px 1fr 280px;gap:16px;max-width:1400px;margin:auto}.student-panel{background:white;border:1px solid var(--line);border-radius:14px;padding:16px}.student-top{padding:18px 25px;background:white;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.student-folder{width:100%;text-align:left;background:white;border:1px solid var(--line);padding:10px;border-radius:8px;margin:4px 0}.student-folder.active{background:#ead5be}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side{display:none}.actions{grid-template-columns:1fr}.test-grid,.student-grid{grid-template-columns:1fr}.content{padding:18px}}
+
+/* ===== Student View: single-screen responsive workspace (tablet / laptop / desktop) ===== */
+#studentApp:not(.hidden){display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+#studentApp .student-top{flex:none;align-items:center;padding:12px 25px}
+#studentApp .student-wrap{flex:1 1 auto;min-height:0;padding:16px 25px;display:flex}
+#studentApp .student-grid{flex:1 1 auto;min-height:0;width:100%;height:100%;grid-template-rows:minmax(0,1fr);max-width:1400px}
+#studentApp .student-panel{min-height:0;min-width:0;overflow-y:auto}
+#studentApp .student-grid>.student-panel:nth-child(2){display:flex;flex-direction:column;overflow:hidden}
+#studentApp .student-grid>.student-panel:nth-child(2)>*{flex:none}
+#studentApp #studentVideoTitle{font-size:22px;margin:5px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#studentApp .student-grid>.student-panel:nth-child(2) .between>div{min-width:0}
+#studentApp #studentVideoBox{flex:1 1 auto;min-height:100px;max-height:none;aspect-ratio:auto;width:100%;display:flex;flex-direction:column;align-items:center;overflow:hidden;overscroll-behavior:none;overflow-anchor:none}
+#studentApp #studentVideoBox #studentEmpty{margin:auto;color:#bbb;padding:20px;text-align:center}
+#studentApp #studentVideo{flex:none;width:100%;height:auto;max-height:none;object-fit:contain;display:block}
+#studentApp .transport{flex-wrap:nowrap;margin-top:0;padding-top:10px;border-top:1px solid var(--line)}
+#studentApp .transport input{flex:1 1 auto;min-width:0;width:auto}
+#studentApp .transport .muted{white-space:nowrap}
+#studentApp #studentStatus{margin-top:8px;padding:8px 11px}
+#studentApp .student-grid>.student-panel:nth-child(2)>#studentVideoBox{margin-bottom:10px}
+/* Tablet */
+@media(min-width:641px) and (max-width:1023px){
+  #studentApp .student-grid{grid-template-columns:170px minmax(0,1fr) 240px;gap:12px}
+  #studentApp .student-wrap{padding:12px 14px}
+  #studentApp .student-top{padding:10px 14px}
+  #studentApp .student-panel{padding:12px}
+}
+/* Laptop */
+@media(min-width:1024px) and (max-width:1439px){
+  #studentApp .student-grid{grid-template-columns:220px minmax(0,1fr) 280px}
+}
+/* Desktop: use the extra width */
+@media(min-width:1440px){
+  #studentApp .student-grid{grid-template-columns:220px minmax(0,1fr) 280px;max-width:none}
+  #studentApp .student-wrap{padding:20px 32px}
+}
+/* Short viewports: tighten spacing only, keep text/buttons readable */
+@media(max-height:760px){
+  #studentApp .student-top{padding-top:8px;padding-bottom:8px}
+  #studentApp .student-wrap{padding-top:10px;padding-bottom:10px}
+  #studentApp .student-panel{padding:12px}
+  #studentApp .control-group{padding-bottom:10px;margin-bottom:10px}
+  #studentApp .seg button{padding:7px 10px}
+  #studentApp #sLoopReadout,#studentApp #studentStatus{padding:6px 10px;margin-top:6px}
+  #studentApp #studentVideoTitle{font-size:19px;margin:3px 0}
+}
+@media(max-height:620px){
+  #studentApp .transpose-grid{margin-top:6px}
+  #studentApp #sRowNum{padding-top:6px;padding-bottom:6px}
+  #studentApp #sLoopRow,#studentApp #sLoop,#studentApp #sClear{padding-top:7px;padding-bottom:7px}
+  #studentApp .control-logout{margin-top:6px;padding-top:6px}
+  #studentApp .student-top{padding-top:5px;padding-bottom:5px}
+  #studentApp .student-wrap{padding-top:6px;padding-bottom:6px}
+}
+/* Logout sits at the bottom of the right-hand control panel, clearly separated from Loop */
+.control-logout{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+#studentApp .student-grid>.student-panel:nth-child(3){display:flex;flex-direction:column}
+#studentApp .student-grid>.student-panel:nth-child(3)>*{flex:none}
+#studentApp .student-grid>.student-panel:nth-child(3)>.control-logout{margin-top:auto}
+#studentApp .student-grid>.student-panel:nth-child(3)>.control-logout::before{content:"";display:block;height:14px}
+@media(max-height:760px){.control-logout{margin-top:10px;padding-top:10px}#studentApp .student-grid>.student-panel:nth-child(3)>.control-logout::before{height:6px}}
+/* Phones keep the original stacked layout */
+@media(max-width:640px){
+  #studentApp:not(.hidden){display:block;height:auto;overflow:visible}
+  #studentApp .student-grid{grid-template-columns:1fr;height:auto}
+  #studentApp .student-wrap{display:block}
+  #studentApp #studentVideoBox{max-height:70vh;flex:none}
+}
+</style>
+</head>
+<body>
+
+<div id="login" class="login">
+<div class="login-card">
+  <div class="brand">𝄞 Practice Hub</div>
+  <div class="tag">Practice · Learn · Grow</div>
+  <div class="eyebrow">Secure Access</div>
+  <div style="margin-top:6px;color:#806f62">Choose how you want to enter Practice Hub.</div>
+  <div class="roles">
+    <button id="roleCreator" class="role active">👑<br>Admin</button>
+    <button id="roleInstructor" class="role">👩‍🏫<br>Instructor</button>
+    <button id="roleStudent" class="role">🎓<br>Student</button>
+  </div>
+
+  <div id="creatorFields">
+    <label>Admin PIN</label><input id="creatorPin" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter Admin PIN">
+  </div>
+
+  <div id="instructorFields" class="hidden">
+    <label>Department</label>
+    <select id="instructorDept"></select>
+    <label>Instructor PIN</label><input id="instructorPin" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter Instructor PIN">
+  </div>
+
+  <div id="studentFields" class="hidden">
+    <label>Department</label>
+    <select id="studentDept"></select>
+    <label>Student PIN</label><input id="studentPin" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter Student PIN">
+  </div>
+
+  <button id="loginBtn" class="btn primary">Continue</button>
+  <div class="help">Your access depends on the role and department selected above.</div>
+</div>
+</div>
+
+<div id="creatorApp" class="app hidden">
+  <aside class="side"><div class="brand2">𝄞 Practice Hub</div><div class="muted" style="color:#d9c5b5">Main Admin</div>
+    <div class="nav" id="creatorNav">
+      <button data-page="dashboard">⌂ Dashboard</button><button data-page="folders">▤ All Folders</button><button data-page="access">⚿ Access & PINs</button>
+    </div>
+    <button class="btn logout" data-logout>↪ Logout</button>
+  </aside>
+  <main class="main"><div class="top"><h2>Admin</h2><span>Main Platform Access</span></div><div id="creatorContent" class="content"></div></main>
+</div>
+
+<div id="instructorApp" class="app hidden">
+  <aside class="side"><div class="brand2">𝄞 Practice Hub</div><div class="muted" style="color:#d9c5b5" id="instDeptLabel"></div>
+    <div class="nav" id="instructorNav"><button data-page="dashboard">⌂ Dashboard</button><button data-page="folders">▤ All Folders</button><button data-page="publish">◉ Publish</button></div>
+    <button class="btn logout" data-logout>↪ Logout</button>
+  </aside>
+  <main class="main"><div class="top"><h2 id="instTitle">Instructor</h2><span>Department Library</span></div><div id="instructorContent" class="content"></div></main>
+</div>
+
+<div id="studentApp" class="hidden">
+  <div class="student-top"><strong style="font:25px Georgia,serif">𝄞 Practice Hub</strong><span id="studentDeptLabel"></span></div>
+  <div class="student-wrap"><div class="student-grid">
+    <div class="student-panel"><div class="eyebrow">Published Folders</div><div id="studentFolders" style="margin-top:10px"></div></div>
+    <div class="student-panel"><div class="between"><div><div class="eyebrow">Lesson Video</div><h2 id="studentVideoTitle" style="font:24px Georgia,serif;margin:7px 0">Select a video</h2></div></div>
+      <div class="video-box" id="studentVideoBox"><div id="studentEmpty" class="muted">Select a published video.</div><video id="studentVideo" class="hidden" playsinline preload="metadata"></video></div>
+      <div class="transport"><button class="btn primary" id="studentPlay">▶</button><button class="btn" id="studentPause">⏸</button><button class="btn" id="studentRestart">↺</button><input id="studentSeek" type="range" min="0" max="0" step=".01" value="0"><span class="muted" id="studentTime">0:00 / 0:00</span></div>
+      <div id="studentStatus" class="notice">Choose a video to begin.</div>
+    </div>
+    <div class="student-panel"><div class="control-group"><div class="eyebrow">Slow Down Only</div><div class="seg" style="margin-top:10px"><button data-speed="1" class="active">1×</button><button data-speed=".75">0.75×</button><button data-speed=".5">0.5×</button></div></div>
+      <div class="control-group"><div class="eyebrow">Transpose</div><div class="transpose-grid"><button data-transpose="-3">A</button><button data-transpose="-2">A#</button><button data-transpose="-1">B</button><button data-transpose="0" class="active">C</button><button data-transpose="1">C#</button><button data-transpose="2">D</button><button data-transpose="3">D#</button></div><div class="muted" style="margin-top:8px">Semitones · pitch changes without changing lesson speed</div></div>
+      <div><div class="eyebrow">Section Loop</div><label for="sRowNum">Row Number</label><input id="sRowNum" type="text" inputmode="numeric" autocomplete="off" placeholder="e.g. 9 or 9-10"><button id="sLoopRow" class="btn" style="width:100%;margin-top:8px">Loop Row</button><div id="sLoopReadout" class="notice">Loop: Off</div><button id="sLoop" class="btn primary" style="width:100%;margin-top:8px">↻ Loop OFF</button><button id="sClear" class="btn" style="width:100%;margin-top:7px">Clear</button></div>
+      <div class="control-logout"><button class="btn" data-logout style="width:100%">↪ Logout</button></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="testModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="between"><div><div class="eyebrow">Student View Test</div><h2 style="font:27px Georgia,serif;margin:5px 0">Test Student View</h2></div><button class="btn" id="closeTest">Close</button></div>
+    <div class="test-grid" style="margin-top:15px">
+      <div class="list-panel"><div class="eyebrow">Videos</div><div id="testVideos" style="margin-top:8px"></div></div>
+      <div class="player-panel"><h3 id="testTitle">Select a video</h3><div class="video-box"><div id="testEmpty" class="muted">Select a video.</div><video id="testVideo" class="hidden" playsinline preload="metadata"></video></div>
+        <div class="transport"><button class="btn primary" id="testPlay">▶</button><button class="btn" id="testPause">⏸</button><button class="btn" id="testRestart">↺</button><input id="testSeek" type="range" min="0" max="0" step=".01" value="0"><span class="muted" id="testTime">0:00 / 0:00</span></div>
+        <div id="testStatus" class="notice">Select a video to begin.</div>
+      </div>
+      <div class="control-panel"><div class="control-group"><div class="eyebrow">Slow Down Only</div><div class="seg" style="margin-top:10px"><button data-test-speed="1" class="active">1×</button><button data-test-speed=".75">0.75×</button><button data-test-speed=".5">0.5×</button></div></div>
+        <div class="control-group"><div class="eyebrow">Transpose</div><div class="transpose-grid"><button data-test-transpose="-3">A</button><button data-test-transpose="-2">A#</button><button data-test-transpose="-1">B</button><button data-test-transpose="0" class="active">C</button><button data-test-transpose="1">C#</button><button data-test-transpose="2">D</button><button data-test-transpose="3">D#</button></div><div class="muted" style="margin-top:8px">Semitones · pitch changes without changing lesson speed</div></div>
+        <div><div class="eyebrow">Section Loop</div><div class="seg" style="margin-top:10px"><button id="tStart">Set Start</button><button id="tEnd">Set End</button></div><div id="tLoopReadout" class="notice">Loop: Off</div><button id="tLoop" class="btn primary" style="width:100%;margin-top:8px">↻ Loop OFF</button><button id="tClear" class="btn" style="width:100%;margin-top:7px">Clear</button></div>
+        <div class="control-logout"><button class="btn" id="testLogout" style="width:100%">↪ Logout</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input id="fileInput" type="file" accept=".mp4,video/mp4" class="hidden">
+
+<script>
+'use strict';
+const KEY='practiceHub18Meta', AUTH='practiceHub18Auth', DB='practiceHub18Videos';
+const DEFAULT_DEPTS=['Carnatic Music','Hindustani Music','Western Music'];
+
+const defaultData=()=>({
+  departments:Object.fromEntries(DEFAULT_DEPTS.map((name,i)=>[name,{instructorPin:'1234',studentPin:'1111',folders:[
+    ...(i===0?[{id:uid(),name:'Janta Swaras',published:true,videos:[]}]:[])
+  ]}]))
+});
+
+let data=loadMeta();
+let auth=loadAuth();
+let role='creator', dept='Carnatic Music', uploadTarget=null, uploadTargetDept='Carnatic Music', testFolder=null;
+let testState={start:null,end:null,loop:false};
+let studentState={start:null,end:null,loop:false,speed:1,transpose:0};
+let testAudio={ctx:null,buffer:null,source:null,kind:null,blobKey:null,speed:1,transpose:0,playing:false};
+
+function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)}
+function loadMeta(){try{return JSON.parse(localStorage.getItem(KEY))||defaultData()}catch(e){return defaultData()}}
+function saveMeta(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+function loadAuth(){try{return JSON.parse(localStorage.getItem(AUTH))||{creatorPin:'2468'}}catch(e){return {creatorPin:'2468'}}}
+function saveAuth(){try{localStorage.setItem(AUTH,JSON.stringify(auth))}catch(e){}}
+function getDept(){if(!data.departments[dept])data.departments[dept]={instructorPin:'1234',studentPin:'1111',folders:[]};return data.departments[dept]}
+function fmt(n){if(!isFinite(n))return '0:00';n=Math.max(0,n);return Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0')}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function openDB(){
+ return new Promise((res,rej)=>{
+  const r=indexedDB.open(DB,1);
+  r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('videos'))r.result.createObjectStore('videos')};
+  r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)
+ })
+}
+async function putBlob(id,blob){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').put(blob,id);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
+async function getBlob(id){const db=await openDB();return new Promise((res,rej)=>{const r=db.transaction('videos').objectStore('videos').get(id);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error)})}
+async function removeBlob(id){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').delete(id);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
+
+function showLogin(){document.getElementById('login').classList.remove('hidden');document.getElementById('creatorApp').classList.add('hidden');document.getElementById('instructorApp').classList.add('hidden');document.getElementById('studentApp').classList.add('hidden')}
+function doLogout(){showLogin();document.getElementById('creatorPin').value='';document.getElementById('instructorPin').value='';document.getElementById('studentPin').value=''}
+
+function chooseRole(r){
+ role=r;
+ document.querySelectorAll('.role').forEach(b=>b.classList.remove('active'));
+ document.getElementById('role'+r[0].toUpperCase()+r.slice(1)).classList.add('active');
+ document.getElementById('creatorFields').classList.toggle('hidden',r!=='creator');
+ document.getElementById('instructorFields').classList.toggle('hidden',r!=='instructor');
+ document.getElementById('studentFields').classList.toggle('hidden',r!=='student');
+}
+
+function login(){
+ if(role==='creator'){
+   const p=document.getElementById('creatorPin').value.trim();
+   if(p!==String(auth.creatorPin||'2468'))return alert('Incorrect Admin PIN.');
+   document.getElementById('login').classList.add('hidden');document.getElementById('creatorApp').classList.remove('hidden');renderCreator('dashboard');return;
+ }
+ if(role==='instructor'){
+   dept=document.getElementById('instructorDept').value;
+   const d=data.departments[dept];
+   if(!d)return alert('Department not found.');
+   if(document.getElementById('instructorPin').value.trim()!==String(d.instructorPin))return alert('Incorrect Instructor PIN.');
+   document.getElementById('login').classList.add('hidden');document.getElementById('instructorApp').classList.remove('hidden');
+   document.getElementById('instTitle').textContent=dept;document.getElementById('instDeptLabel').textContent=dept;renderInstructor('dashboard');return;
+ }
+ dept=document.getElementById('studentDept').value;
+ const d=data.departments[dept];
+ if(!d)return alert('Department not found.');
+ if(document.getElementById('studentPin').value.trim()!==String(d.studentPin))return alert('Incorrect Student PIN.');
+ document.getElementById('login').classList.add('hidden');document.getElementById('studentApp').classList.remove('hidden');
+ document.getElementById('studentDeptLabel').textContent=dept+' · Student View';renderStudent();setupStudentControls();
+}
+
+function renderDeptSelects(){
+ const opts=Object.keys(data.departments).map(x=>`<option>${esc(x)}</option>`).join('');
+ document.getElementById('instructorDept').innerHTML=opts;document.getElementById('studentDept').innerHTML=opts;
+}
+function navHTML(active,kind){return kind==='creator'?`
+<button data-page="dashboard" class="${active==='dashboard'?'active':''}">⌂ Dashboard</button>
+<button data-page="folders" class="${active==='folders'?'active':''}">▤ All Folders</button>
+<button data-page="access" class="${active==='access'?'active':''}">⚿ Access & PINs</button>`:`
+<button data-page="dashboard" class="${active==='dashboard'?'active':''}">⌂ Dashboard</button>
+<button data-page="folders" class="${active==='folders'?'active':''}">▤ All Folders</button>
+<button data-page="publish" class="${active==='publish'?'active':''}">◉ Publish</button>`}
+
+function bindNav(kind){
+ const root=document.getElementById(kind==='creator'?'creatorNav':'instructorNav');
+ root.innerHTML=navHTML(kind==='creator'?window.cPage||'dashboard':window.iPage||'dashboard',kind);
+ root.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>kind==='creator'?renderCreator(b.dataset.page):renderInstructor(b.dataset.page));
+}
+
+function renderCreator(page='dashboard'){
+ window.cPage=page;bindNav('creator');const c=document.getElementById('creatorContent');
+ if(page==='dashboard'){c.innerHTML=`<div class="eyebrow">Main Admin</div><h1 style="font:34px Georgia,serif">Welcome, Admin</h1><div class="actions">
+<div class="action" onclick="renderCreator('folders')">📁<strong>All Folders</strong><span class="muted">Create and organise folders</span></div>
+<div class="action" onclick="creatorUpload()">⬆<strong>Upload Video</strong><span class="muted">Add an MP4 to a folder</span></div>
+<div class="action" onclick="renderCreator('access')">⚿<strong>Access & PINs</strong><span class="muted">Manage Admin, Instructor and Student access</span></div></div>
+<div class="card"><strong>Platform</strong><p class="muted">Create department libraries, organise lessons, publish content, and let students access only their department's published videos.</p></div>`;return}
+ if(page==='folders'){renderFolders(c,true);return}
+ renderAccess(c);
+}
+function renderInstructor(page='dashboard'){
+ window.iPage=page;bindNav('instructor');const c=document.getElementById('instructorContent');
+ if(page==='dashboard'){c.innerHTML=`<div class="eyebrow">${esc(dept)} Instructor</div><h1 style="font:34px Georgia,serif">Welcome, Instructor</h1><div class="actions">
+<div class="action" onclick="renderInstructor('folders')">📁<strong>All Folders</strong><span class="muted">Create and organise lessons</span></div>
+<div class="action" onclick="uploadVideo()">⬆<strong>Upload Video</strong><span class="muted">Add an MP4 lesson</span></div>
+<div class="action" onclick="renderInstructor('publish')">◉<strong>Publish</strong><span class="muted">Control student visibility</span></div></div>`;return}
+ if(page==='folders'){renderFolders(c,false);return}
+ c.innerHTML=`<div class="eyebrow">Publish</div><h1 style="font:34px Georgia,serif">Publish Content</h1><div class="notice">Publishing a folder makes all videos inside that folder available in Student View. Set the folder Private to hide its contents from students.</div><div class="card">${getDept().folders.map(f=>`<div class="folder"><div class="between"><strong>📁 ${esc(f.name)}</strong><button class="btn small" onclick="toggleFolder('${f.id}')">${f.published?'Set Private':'Publish'}</button></div></div>`).join('')||'<div class="muted">No folders yet.</div>'}</div>`;
+}
+function goBackFolders(){if(role==='creator')renderCreator('folders');else renderInstructor('folders')}
+function renderFolders(c,creator){
+ if(creator){
+   const departments=Object.entries(data.departments);
+   c.innerHTML=`<div class="between"><div><div class="eyebrow">Admin Library</div><h1 style="font:34px Georgia,serif">All Folders</h1><div class="muted">All departments and their folders are shown here.</div></div><button class="btn primary" onclick="createFolder()">+ Create Folder</button></div>
+   ${departments.map(([subject,d])=>`
+     <div class="card">
+       <div class="between"><div><div class="eyebrow">Department</div><h2 style="font:25px Georgia,serif;margin:5px 0">🎵 ${esc(subject)}</h2></div>
+       <span class="muted">${d.folders.length} folder${d.folders.length===1?'':'s'}</span></div>
+       ${d.folders.map(f=>`
+         <div class="folder" data-dept="${esc(subject)}" data-folder-id="${f.id}" ondragover="folderDragOver(event,this)" ondragleave="folderDragLeave(this)" ondrop="folderDrop(event,this)">
+           <div class="folder-head">
+             <div><span class="drag-handle" draggable="true" title="Drag to reorder" aria-label="Drag to reorder" ondragstart="folderDragStart(event,this.closest('.folder'))" ondragend="folderDragEnd(this.closest('.folder'))">⠿</span><div style="display:inline-block;vertical-align:middle"><div class="folder-name">📁 ${esc(f.name)}</div><span class="muted">${f.videos.length} video${f.videos.length===1?'':'s'} · </span><span class="badge ${f.published?'published':'private'}">${f.published?'Published':'Private'}</span></div></div>
+             <div class="row">
+               <button class="btn small" onclick="openCreatorFolder('${esc(subject)}','${f.id}')">Open</button>
+               <button class="btn small" onclick="uploadVideo('${f.id}','${esc(subject)}')">Upload</button>
+               <button class="btn small" onclick="renameCreatorFolder('${esc(subject)}','${f.id}')">Rename</button>
+               <button class="btn small" onclick="toggleCreatorFolder('${esc(subject)}','${f.id}')">${f.published?'Set Private':'Publish'}</button>
+               <button class="btn small danger" onclick="deleteCreatorFolder('${esc(subject)}','${f.id}')">Delete</button>
+             </div>
+           </div>
+         </div>`).join('') || '<div class="muted" style="margin-top:12px">No folders in this department yet.</div>'}
+     </div>`).join('') || '<div class="card muted">No departments yet.</div>'}`;
+   return;
+ }
+ const d=getDept();
+ c.innerHTML=`<div class="between"><div><div class="eyebrow">${esc(dept)} Library</div><h1 style="font:34px Georgia,serif">All Folders</h1></div><button class="btn primary" onclick="createFolder()">+ Create Folder</button></div>
+ ${d.folders.map(f=>`<div class="folder" data-dept="${esc(dept)}" data-folder-id="${f.id}" ondragover="folderDragOver(event,this)" ondragleave="folderDragLeave(this)" ondrop="folderDrop(event,this)"><div class="folder-head"><div><span class="drag-handle" draggable="true" title="Drag to reorder" aria-label="Drag to reorder" ondragstart="folderDragStart(event,this.closest('.folder'))" ondragend="folderDragEnd(this.closest('.folder'))">⠿</span><div style="display:inline-block;vertical-align:middle"><div class="folder-name">📁 ${esc(f.name)}</div><span class="muted">${f.videos.length} video${f.videos.length===1?'':'s'} · </span><span class="badge ${f.published?'published':'private'}">${f.published?'Published':'Private'}</span></div></div>
+ <div class="row"><button class="btn small" onclick="openFolder('${f.id}')">Open</button><button class="btn small" onclick="uploadVideo('${f.id}')">Upload</button><button class="btn small" onclick="renameFolder('${f.id}')">Rename</button><button class="btn small" onclick="toggleFolder('${f.id}')">${f.published?'Set Private':'Publish'}</button><button class="btn small danger" onclick="deleteFolder('${f.id}')">Delete</button></div></div></div>`).join('')||'<div class="card muted">No folders yet.</div>'}`;
+}
+function createFolder(){
+ if(role==='creator'){
+   const departments=Object.keys(data.departments);
+   const subject=prompt('Enter the department for this folder:\n\n'+departments.join('\n'));
+   if(!subject||!data.departments[subject.trim()])return;
+   const n=prompt('Folder name:');if(!n||!n.trim())return;
+   data.departments[subject.trim()].folders.push({id:uid(),name:n.trim(),published:false,videos:[]});
+   saveMeta();renderCreator('folders');return;
+ }
+ const n=prompt('Folder name:');if(!n||!n.trim())return;
+ getDept().folders.push({id:uid(),name:n.trim(),published:false,videos:[]});
+ saveMeta();renderInstructor('folders');
+}
+function renameCreatorFolder(subject,id){
+ const f=data.departments[subject]?.folders.find(x=>x.id===id);if(!f)return;
+ const n=prompt('Rename folder:',f.name);if(n&&n.trim()){f.name=n.trim();saveMeta();renderCreator('folders')}
+}
+let folderDrag={dept:null,id:null};
+function folderDragStart(e,el){
+ if(!el||!el.dataset.folderId)return;
+ folderDrag={dept:el.dataset.dept,id:el.dataset.folderId};
+ el.classList.add('dragging');
+ if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',el.dataset.folderId);}
+}
+function folderDragOver(e,el){
+ if(!folderDrag.id||el.dataset.dept!==folderDrag.dept||el.dataset.folderId===folderDrag.id)return;
+ e.preventDefault();
+ e.dataTransfer.dropEffect='move';
+ el.classList.add('drag-over');
+}
+function folderDragLeave(el){el.classList.remove('drag-over')}
+function folderDragEnd(el){el.classList.remove('dragging','drag-over');document.querySelectorAll('.folder.drag-over').forEach(x=>x.classList.remove('drag-over'));folderDrag={dept:null,id:null}}
+function folderDrop(e,el){
+ e.preventDefault();
+ const sourceDept=folderDrag.dept,sourceId=folderDrag.id,targetDept=el.dataset.dept,targetId=el.dataset.folderId;
+ document.querySelectorAll('.folder.drag-over').forEach(x=>x.classList.remove('drag-over'));
+ if(!sourceId||sourceDept!==targetDept||sourceId===targetId)return;
+ const d=data.departments[sourceDept];if(!d)return;
+ const from=d.folders.findIndex(f=>f.id===sourceId),to=d.folders.findIndex(f=>f.id===targetId);
+ if(from<0||to<0)return;
+ const [moved]=d.folders.splice(from,1);
+ d.folders.splice(to,0,moved);
+ saveMeta();
+ if(role==='creator')renderCreator('folders');else renderInstructor('folders');
+ folderDrag={dept:null,id:null};
+}
+function moveCreatorFolder(subject,id,direction){
+ const d=data.departments[subject];if(!d)return;
+ const i=d.folders.findIndex(x=>x.id===id);if(i<0)return;
+ const j=i+Number(direction);if(j<0||j>=d.folders.length)return;
+ [d.folders[i],d.folders[j]]=[d.folders[j],d.folders[i]];
+ saveMeta();renderCreator('folders');
+}
+function toggleCreatorFolder(subject,id){
+ const f=data.departments[subject]?.folders.find(x=>x.id===id);if(!f)return;
+ f.published=!f.published;saveMeta();renderCreator('folders')
+}
+async function deleteCreatorFolder(subject,id){
+ const d=data.departments[subject],f=d?.folders.find(x=>x.id===id);if(!f)return;
+ if(!confirm(`Delete "${f.name}" and its videos?`))return;
+ for(const v of f.videos)if(v.blobKey)try{await removeBlob(v.blobKey)}catch(e){}
+ d.folders=d.folders.filter(x=>x.id!==id);saveMeta();renderCreator('folders')
+}
+function openCreatorFolder(subject,id){
+ const d=data.departments[subject],f=d?.folders.find(x=>x.id===id);if(!f)return;
+ const c=document.getElementById('creatorContent');
+ c.innerHTML=`<div class="between"><div><div class="eyebrow">${esc(subject)}</div><h1 style="font:32px Georgia,serif">📁 ${esc(f.name)}</h1></div><div class="row"><button class="btn" onclick="renderCreator('folders')">← All Folders</button><button class="btn primary" onclick="uploadVideo('${f.id}','${esc(subject)}')">Upload Video</button></div></div>
+ <div class="card">${f.videos.map(v=>`<div class="video-row"><div><strong>🎬 ${esc(v.name)}</strong><div class="muted">${Math.round((v.size||0)/1024/1024*10)/10} MB</div></div><div class="row"><button class="btn small" onclick="testCreatorVideo('${esc(subject)}','${f.id}','${v.id}')">Test Student View</button><button class="btn small" onclick="renameCreatorVideo('${esc(subject)}','${f.id}','${v.id}')">Rename</button><button class="btn small" onclick="moveCreatorVideo('${esc(subject)}','${f.id}','${v.id}')">Move</button><button class="btn small danger" onclick="deleteCreatorVideo('${esc(subject)}','${f.id}','${v.id}')">Delete</button></div></div>`).join('')||'<div class="muted">No videos in this folder yet.</div>'}</div>`;
+}
+function renameCreatorVideo(subject,fid,vid){const v=data.departments[subject]?.folders.find(f=>f.id===fid)?.videos.find(v=>v.id===vid);if(!v)return;let n=prompt('Rename video:',v.name.replace(/\.mp4$/i,''));if(!n||!n.trim())return;n=n.trim().replace(/\.mp4$/i,'')+'.mp4';v.name=n;saveMeta();openCreatorFolder(subject,fid)}
+async function deleteCreatorVideo(subject,fid,vid){const f=data.departments[subject]?.folders.find(x=>x.id===fid),v=f?.videos.find(x=>x.id===vid);if(!v||!confirm(`Delete "${v.name}"?`))return;if(v.blobKey)try{await removeBlob(v.blobKey)}catch(e){}f.videos=f.videos.filter(x=>x.id!==vid);saveMeta();openCreatorFolder(subject,fid)}
+function moveCreatorVideo(subject,fid,vid){
+ const from=data.departments[subject]?.folders.find(x=>x.id===fid),v=from?.videos.find(x=>x.id===vid);if(!v)return;
+ const choices=data.departments[subject].folders.filter(f=>f.id!==fid).map(f=>f.name).join('\n');
+ const target=prompt('Move to folder:\n\n'+choices);if(!target)return;
+ const to=data.departments[subject].folders.find(f=>f.name.toLowerCase()===target.trim().toLowerCase());if(!to)return alert('Folder not found.');
+ from.videos=from.videos.filter(x=>x.id!==vid);to.videos.push(v);saveMeta();openCreatorFolder(subject,fid)
+}
+async function testCreatorVideo(subject,fid,vid){
+ const f=data.departments[subject]?.folders.find(x=>x.id===fid),v=f?.videos.find(x=>x.id===vid);if(!v)return;
+ testFolder=f;testState={start:null,end:null,loop:false};document.getElementById('testModal').classList.remove('hidden');document.getElementById('testTitle').textContent=v.name;
+ const list=document.getElementById('testVideos');list.innerHTML=f.videos.map(x=>`<button class="list-btn ${x.id===vid?'active':''}" data-v="${x.id}">${esc(x.name)}</button>`).join('');
+ list.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>testCreatorVideo(subject,fid,b.dataset.v));
+ await loadInto(document.getElementById('testVideo'),v,'test');
+}
+function createFolder(){const n=prompt('Folder name:');if(!n||!n.trim())return;getDept().folders.push({id:uid(),name:n.trim(),published:false,videos:[]});saveMeta();role==='creator'?renderCreator('folders'):renderInstructor('folders')}
+function renameFolder(id){const f=getDept().folders.find(x=>x.id===id);if(!f)return;const n=prompt('Rename folder:',f.name);if(n&&n.trim()){f.name=n.trim();saveMeta();role==='creator'?renderCreator('folders'):renderInstructor('folders')}}
+async function deleteFolder(id){const f=getDept().folders.find(x=>x.id===id);if(!f||!confirm(`Delete "${f.name}" and its videos?`))return;for(const v of f.videos)if(v.blobKey)try{await removeBlob(v.blobKey)}catch(e){};getDept().folders=getDept().folders.filter(x=>x.id!==id);saveMeta();role==='creator'?renderCreator('folders'):renderInstructor('folders')}
+function moveFolder(id,direction){
+ const d=getDept();
+ const i=d.folders.findIndex(x=>x.id===id);if(i<0)return;
+ const j=i+Number(direction);if(j<0||j>=d.folders.length)return;
+ [d.folders[i],d.folders[j]]=[d.folders[j],d.folders[i]];
+ saveMeta();role==='creator'?renderCreator('folders'):renderInstructor('folders');
+}
+function toggleFolder(id){const f=getDept().folders.find(x=>x.id===id);if(!f)return;f.published=!f.published;saveMeta();role==='creator'?renderCreator('folders'):renderInstructor('publish')}
+function openFolder(id){const f=getDept().folders.find(x=>x.id===id);if(!f)return;const c=role==='creator'?document.getElementById('creatorContent'):document.getElementById('instructorContent');c.innerHTML=`<div class="between"><div><div class="eyebrow">Folder</div><h1 style="font:32px Georgia,serif">📁 ${esc(f.name)}</h1></div><div class="row"><button class="btn" onclick="goBackFolders()">← All Folders</button><button class="btn primary" onclick="uploadVideo('${f.id}')">Upload Video</button></div></div><div class="card">${f.videos.map(v=>`<div class="video-row"><div><strong>🎬 ${esc(v.name)}</strong><div class="muted">${Math.round((v.size||0)/1024/1024*10)/10} MB · ${v.published?'Published':'Private'}</div></div><div class="row"><button class="btn small" onclick="testVideo('${f.id}','${v.id}')">Test Student View</button><button class="btn small" onclick="renameVideo('${f.id}','${v.id}')">Rename</button><button class="btn small" onclick="moveVideo('${f.id}','${v.id}')">Move</button><button class="btn small danger" onclick="deleteVideo('${f.id}','${v.id}')">Delete</button></div></div>`).join('')||'<div class="muted">No videos in this folder yet.</div>'}</div>`}
+function renameVideo(fid,vid){const v=getDept().folders.find(f=>f.id===fid)?.videos.find(v=>v.id===vid);if(!v)return;let n=prompt('Rename video:',v.name.replace(/\.mp4$/i,''));if(!n||!n.trim())return;n=n.trim().replace(/\.mp4$/i,'')+'.mp4';v.name=n;saveMeta();openFolder(fid)}
+async function deleteVideo(fid,vid){const f=getDept().folders.find(x=>x.id===fid),v=f?.videos.find(x=>x.id===vid);if(!v||!confirm(`Delete "${v.name}"?`))return;if(v.blobKey)try{await removeBlob(v.blobKey)}catch(e){};f.videos=f.videos.filter(x=>x.id!==vid);saveMeta();openFolder(fid)}
+function moveVideo(fid,vid){const d=getDept(),v=d.folders.find(f=>f.id===fid)?.videos.find(x=>x.id===vid);if(!v)return;const choices=d.folders.filter(f=>f.id!==fid).map(f=>`${f.id} — ${f.name}`).join('\n');const target=prompt('Enter the destination folder name:\n\n'+choices);if(!target)return;const f=d.folders.find(x=>x.name.toLowerCase()===target.trim().toLowerCase());if(!f)return alert('Folder not found.');const from=d.folders.find(x=>x.id===fid);from.videos=from.videos.filter(x=>x.id!==vid);f.videos.push(v);saveMeta();openFolder(fid)}
+function uploadVideo(folderId,subject){
+ uploadTarget=folderId||null;
+ uploadTargetDept=subject||dept;
+ const input=document.getElementById('fileInput');input.value='';input.click()
+}
+function creatorUpload(){
+ const departments=Object.keys(data.departments);
+ const subject=prompt('Department for the upload:\n\n'+departments.join('\n'));
+ if(!subject||!data.departments[subject.trim()])return;
+ const folders=data.departments[subject.trim()].folders;
+ if(!folders.length)return alert('Create a folder in this department first.');
+ const folderName=prompt('Folder name:\n\n'+folders.map(f=>f.name).join('\n'));
+ const f=folders.find(x=>x.name.toLowerCase()===String(folderName||'').trim().toLowerCase());
+ if(!f)return alert('Folder not found.');
+ uploadVideo(f.id,subject.trim());
+}
+document.getElementById('fileInput').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;if(!/\.mp4$/i.test(file.name))return alert('Please select an MP4 file.');
+ let f=null;
+ if(uploadTarget){
+   const targetDept=uploadTargetDept||dept;
+   f=data.departments[targetDept]?.folders.find(x=>x.id===uploadTarget);
+}
+ if(!f){const all=Object.entries(data.departments).flatMap(([s,d])=>d.folders.map(x=>({s,x})));if(all.length===1){dept=all[0].s;f=all[0].x}else if(all.length>1){const name=prompt('Folder name to upload into:');f=Object.values(data.departments).flatMap(d=>d.folders).find(x=>x.name.toLowerCase()===String(name||'').trim().toLowerCase())}}
+ if(!f)return alert('Please create/open a folder first.');
+ const id=uid();try{await putBlob(id,file)}catch(e){return alert('The MP4 could not be stored by this browser. Please try again.')}
+ f.videos.push({id,name:file.name,blobKey:id,size:file.size,published:false});saveMeta();e.target.value='';openFolder(f.id)
+});
+
+function renderAccess(c){
+ const depts=Object.entries(data.departments);
+ c.innerHTML=`<div class="eyebrow">Main Admin</div><h1 style="font:34px Georgia,serif">Access & PINs</h1>
+ <div class="card"><h2>Admin PIN</h2><button class="btn primary" onclick="changeCreatorPin()">Change Admin PIN</button></div>
+ <div class="card"><h2>Departments & Instructor/Student PINs</h2>${depts.map(([name,d])=>`<div class="folder"><div class="between"><div><strong>${esc(name)}</strong><div class="muted">Instructor PIN and Student PIN</div></div><div class="row"><button class="btn small" onclick="changeDeptPin('${esc(name)}','instructor')">Change Instructor PIN</button><button class="btn small" onclick="changeDeptPin('${esc(name)}','student')">Change Student PIN</button></div></div></div>`).join('')}</div>
+ <div class="card"><h2>Add Department</h2><div class="row"><input id="newDept" placeholder="e.g. Keyboard Music" style="flex:1"><button class="btn primary" onclick="addDept()">Add Department</button></div></div>`;
+}
+function changeCreatorPin(){const old=prompt('Current Admin PIN:');if(old!==String(auth.creatorPin))return alert('Current PIN is incorrect.');const n=prompt('New Admin PIN:');if(!/^\d{4,8}$/.test(n||''))return alert('Use 4–8 digits.');const c=prompt('Confirm new PIN:');if(n!==c)return alert('PINs do not match.');auth.creatorPin=n;saveAuth();alert('Admin PIN changed.')}
+function changeDeptPin(name,type){const d=data.departments[name];const key=type==='instructor'?'instructorPin':'studentPin';const old=prompt('Current '+type+' PIN:');if(old!==String(d[key]))return alert('Current PIN is incorrect.');const n=prompt('New PIN:');if(!/^\d{4,8}$/.test(n||''))return alert('Use 4–8 digits.');const c=prompt('Confirm new PIN:');if(n!==c)return alert('PINs do not match.');d[key]=n;saveMeta();alert(type+' PIN changed for '+name+'.')}
+function addDept(){const n=document.getElementById('newDept').value.trim();if(!n)return;if(data.departments[n])return alert('That department already exists.');data.departments[n]={instructorPin:'1234',studentPin:'1111',folders:[]};saveMeta();renderDeptSelects();renderAccess(document.getElementById('creatorContent'))}
+
+async function testVideo(fid,vid){
+ const f=getDept().folders.find(x=>x.id===fid),v=f?.videos.find(x=>x.id===vid);if(!v)return;
+ testFolder=f;testState={start:null,end:null,loop:false};
+ document.getElementById('testModal').classList.remove('hidden');document.getElementById('testTitle').textContent=v.name;
+ const list=document.getElementById('testVideos');list.innerHTML=f.videos.map(x=>`<button class="list-btn ${x.id===vid?'active':''}" data-v="${x.id}">${esc(x.name)}</button>`).join('');
+ list.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>testVideo(fid,b.dataset.v));
+ await loadInto(document.getElementById('testVideo'),v,'test');
+}
+function stopPitchAudio(){
+ try{if(testAudio.source){testAudio.source.onended=null;testAudio.source.stop();testAudio.source.disconnect()}}catch(e){}
+ testAudio.source=null;testAudio.playing=false;
+}
+function resetPitchAudio(){
+ stopPitchAudio();
+ testAudio.buffer=null;testAudio.kind=null;testAudio.blobKey=null;testAudio.speed=1;testAudio.transpose=0;
+}
+async function ensurePitchBuffer(video,kind){
+ const vdata=video.dataset.blobKey||'';
+ if(testAudio.buffer&&testAudio.blobKey===vdata&&testAudio.kind===kind)return true;
+ const blob=vdata?await getBlob(vdata):null;
+ if(!blob)return false;
+ try{
+   if(!testAudio.ctx)testAudio.ctx=new (window.AudioContext||window.webkitAudioContext)();
+   const ab=await blob.arrayBuffer();
+   testAudio.buffer=await testAudio.ctx.decodeAudioData(ab.slice(0));
+   testAudio.blobKey=vdata;testAudio.kind=kind;
+   return true;
+ }catch(e){
+   console.error(e);return false;
+ }
+}
+function audioStartAt(video,kind){
+ if(!testAudio.buffer||testAudio.kind!==kind)return;
+ stopPitchAudio();
+ const ctx=testAudio.ctx, src=ctx.createBufferSource();
+ src.buffer=testAudio.buffer;
+ const rate=Number(testAudio.speed||1), semis=Number(testAudio.transpose||0);
+ src.playbackRate.value=rate;
+ // playbackRate changes pitch too; detune compensates it so transpose is independent of speed.
+ src.detune.value=(semis*100)-(1200*Math.log2(rate));
+ src.connect(ctx.destination);
+ const offset=Math.max(0,Math.min(video.currentTime,Math.max(0,testAudio.buffer.duration-0.01)));
+ try{src.start(0,offset);testAudio.source=src;testAudio.playing=true}catch(e){console.error(e)}
+}
+async function setTranspose(video,kind,semis){
+ const n=Number(semis)||0;
+ testAudio.transpose=n;
+ const buttons=document.querySelectorAll(kind==='student'?'[data-transpose]':'[data-test-transpose]');
+ buttons.forEach(b=>b.classList.toggle('active',Number(b.dataset[kind==='student'?'transpose':'testTranspose'])===n));
+ if(!video.src)return;
+ if(n===0){
+   stopPitchAudio();video.muted=false;video.playbackRate=Number(testAudio.speed||1);return;
+ }
+ const ok=await ensurePitchBuffer(video,kind);
+ if(!ok){testAudio.transpose=0;buttons.forEach(b=>b.classList.toggle('active',Number(b.dataset[kind==='student'?'transpose':'testTranspose'])===0));alert('Transpose could not be started for this MP4. The original audio is unchanged.');return}
+ video.muted=true;
+ if(testAudio.ctx.state==='suspended')await testAudio.ctx.resume();
+ if(!video.paused)audioStartAt(video,kind);
+}
+async function syncPitchAudio(video,kind){
+ if(testAudio.transpose===0)return;
+ const ok=await ensurePitchBuffer(video,kind);if(!ok)return;
+ if(testAudio.ctx.state==='suspended')await testAudio.ctx.resume();
+ audioStartAt(video,kind);
+}
+async function loadInto(video,v,kind){
+ resetPitchAudio();video.pause();video.muted=false;video.dataset.blobKey=v.blobKey||'';video.removeAttribute('src');video.load();
+ const blob=await getBlob(v.blobKey);if(!blob)return alert('The stored MP4 could not be found.');
+ const url=URL.createObjectURL(blob);video.dataset.url=url;
+ if(kind==='student'){studentState={start:null,end:null,loop:false,speed:1,transpose:0};testAudio.speed=1;testAudio.transpose=0;document.querySelectorAll('[data-speed]').forEach(x=>x.classList.toggle('active',x.dataset.speed==='1'));document.querySelectorAll('[data-transpose]').forEach(x=>x.classList.toggle('active',x.dataset.transpose==='0'))}else{testState={start:null,end:null,loop:false};testAudio.speed=1;testAudio.transpose=0;document.querySelectorAll('[data-test-speed]').forEach(x=>x.classList.toggle('active',x.dataset.testSpeed==='1'));document.querySelectorAll('[data-test-transpose]').forEach(x=>x.classList.toggle('active',x.dataset.testTranspose==='0'))}video.src=url;video.classList.remove('hidden');
+ document.getElementById(kind==='test'?'testEmpty':'studentEmpty').classList.add('hidden');
+ document.getElementById(kind==='test'?'testStatus':'studentStatus').textContent='MP4 ready. Press Play.';
+ video.onloadedmetadata=()=>{if(kind==='test'){document.getElementById('testSeek').max=video.duration||0}else document.getElementById('studentSeek').max=video.duration||0};
+}
+function closeTest(){const v=document.getElementById('testVideo');stopPitchAudio();v.muted=false;v.pause();if(v.dataset.url)URL.revokeObjectURL(v.dataset.url);v.removeAttribute('src');v.load();document.getElementById('testModal').classList.add('hidden')}
+function setupTest(){
+ const v=document.getElementById('testVideo');
+ document.getElementById('testPlay').onclick=async()=>{if(testAudio.transpose!==0){if(!await ensurePitchBuffer(v,'test'))return;if(testAudio.ctx.state==='suspended')await testAudio.ctx.resume();v.muted=true;audioStartAt(v,'test')}v.play().catch(()=>{})};
+ document.getElementById('testPause').onclick=()=>{v.pause();if(testAudio.transpose!==0)stopPitchAudio()};
+ document.getElementById('testRestart').onclick=async()=>{v.currentTime=0;if(testAudio.transpose!==0)await syncPitchAudio(v,'test');v.play().catch(()=>{})};
+ document.getElementById('testSeek').oninput=async e=>{v.currentTime=+e.target.value;if(testAudio.transpose!==0&&!v.paused)await syncPitchAudio(v,'test')};
+ v.ontimeupdate=()=>{document.getElementById('testSeek').value=v.currentTime;document.getElementById('testTime').textContent=fmt(v.currentTime)+' / '+fmt(v.duration);if(testState.loop&&testState.end!=null&&v.currentTime>=testState.end){v.currentTime=testState.start;if(testAudio.transpose!==0)audioStartAt(v,'test');v.play().catch(()=>{})}};
+ v.onended=()=>{if(testState.loop&&testState.end!=null){v.currentTime=testState.start;if(testAudio.transpose!==0)audioStartAt(v,'test');v.play().catch(()=>{})}else if(testAudio.transpose!==0)stopPitchAudio()};
+ document.querySelectorAll('[data-test-speed]').forEach(b=>b.onclick=async()=>{document.querySelectorAll('[data-test-speed]').forEach(x=>x.classList.remove('active'));b.classList.add('active');testAudio.speed=+b.dataset.testSpeed;if(testAudio.transpose===0){v.playbackRate=testAudio.speed}else{await syncPitchAudio(v,'test')}});
+ document.querySelectorAll('[data-test-transpose]').forEach(b=>b.onclick=()=>setTranspose(v,'test',b.dataset.testTranspose));
+ document.getElementById('tStart').onclick=()=>{if(!v.src)return alert('Select a video first.');testState.start=v.currentTime;testState.end=null;testState.loop=false;document.getElementById('tLoopReadout').textContent='Start: '+fmt(v.currentTime);document.getElementById('tLoop').textContent='↻ Loop OFF'};
+ document.getElementById('tEnd').onclick=()=>{if(testState.start==null)return alert('Set Start first.');if(v.currentTime<=testState.start)return alert('Set End after Start.');testState.end=v.currentTime;testState.loop=false;document.getElementById('tLoopReadout').textContent='Loop: '+fmt(testState.start)+' → '+fmt(testState.end)};
+ document.getElementById('tLoop').onclick=()=>{if(testState.start==null||testState.end==null)return alert('Set Start and Set End first.');testState.loop=!testState.loop;document.getElementById('tLoop').textContent=testState.loop?'↻ Loop ON':'↻ Loop OFF'};
+ document.getElementById('tClear').onclick=()=>{testState={start:null,end:null,loop:false};document.getElementById('tLoopReadout').textContent='Loop: Off';document.getElementById('tLoop').textContent='↻ Loop OFF'};
+ document.getElementById('closeTest').onclick=closeTest;
+}
+function renderStudent(){
+ const d=data.departments[dept],wrap=document.getElementById('studentFolders');wrap.innerHTML='';
+ const folders=d.folders.filter(f=>f.published);
+ if(!folders.length){wrap.innerHTML='<div class="notice">No published lessons yet.</div>';return}
+ folders.forEach(f=>{const b=document.createElement('button');b.className='student-folder';b.textContent='📁 '+f.name;b.onclick=()=>renderStudentVideos(f);wrap.appendChild(b)})
+}
+function renderStudentVideos(f){
+ const wrap=document.getElementById('studentFolders');wrap.innerHTML=`<button class="btn small" onclick="renderStudent()">← Folders</button><div style="margin-top:8px"><strong>📁 ${esc(f.name)}</strong></div>`;
+ f.videos.forEach(v=>{const b=document.createElement('button');b.className='student-folder';b.textContent='▶ '+v.name;b.onclick=()=>loadInto(document.getElementById('studentVideo'),v,'student');wrap.appendChild(b)})
+}
+function setupStudentControls(){
+ const v=document.getElementById('studentVideo');
+ document.getElementById('studentPlay').onclick=async()=>{if(testAudio.transpose!==0){if(!await ensurePitchBuffer(v,'student'))return;if(testAudio.ctx.state==='suspended')await testAudio.ctx.resume();v.muted=true;audioStartAt(v,'student')}v.play().catch(()=>{})};
+ document.getElementById('studentPause').onclick=()=>{v.pause();if(testAudio.transpose!==0)stopPitchAudio()};
+ document.getElementById('studentRestart').onclick=async()=>{v.currentTime=0;if(testAudio.transpose!==0)await syncPitchAudio(v,'student');v.play().catch(()=>{})};
+ document.getElementById('studentSeek').oninput=async e=>{v.currentTime=+e.target.value;if(testAudio.transpose!==0&&!v.paused)await syncPitchAudio(v,'student')};
+ v.ontimeupdate=()=>{document.getElementById('studentSeek').value=v.currentTime;document.getElementById('studentTime').textContent=fmt(v.currentTime)+' / '+fmt(v.duration);if(studentState.loop&&studentState.end!=null&&v.currentTime>=studentState.end){v.currentTime=studentState.start;if(testAudio.transpose!==0)audioStartAt(v,'student');v.play().catch(()=>{})}};
+ v.onended=()=>{if(studentState.loop&&studentState.end!=null){v.currentTime=studentState.start;if(testAudio.transpose!==0)audioStartAt(v,'student');v.play().catch(()=>{})}else if(testAudio.transpose!==0)stopPitchAudio()};
+ document.querySelectorAll('[data-speed]').forEach(b=>b.onclick=async()=>{document.querySelectorAll('[data-speed]').forEach(x=>x.classList.remove('active'));b.classList.add('active');studentState.speed=+b.dataset.speed;testAudio.speed=studentState.speed;if(testAudio.transpose===0){v.playbackRate=studentState.speed}else{await syncPitchAudio(v,'student')}});
+ document.querySelectorAll('[data-transpose]').forEach(b=>b.onclick=()=>setTranspose(v,'student',b.dataset.transpose));
+ document.getElementById('sLoop').onclick=()=>{if(studentState.start==null||studentState.end==null)return alert('Enter a row number and press Loop Row first.');studentState.loop=!studentState.loop;document.getElementById('sLoop').textContent=studentState.loop?'↻ Loop ON':'↻ Loop OFF'};
+ document.getElementById('sClear').onclick=()=>{studentState={start:null,end:null,loop:false};document.getElementById('sLoopReadout').textContent='Loop: Off';document.getElementById('sLoop').textContent='↻ Loop OFF'};
+}
+
+function bind(){
+ renderDeptSelects();chooseRole('creator');setupTest();
+ document.getElementById('roleCreator').onclick=()=>chooseRole('creator');
+ document.getElementById('roleInstructor').onclick=()=>chooseRole('instructor');
+ document.getElementById('roleStudent').onclick=()=>chooseRole('student');
+ document.getElementById('loginBtn').onclick=login;
+ ['creatorPin','instructorPin','studentPin'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+ document.querySelectorAll('[data-logout]').forEach(b=>b.onclick=doLogout);
+}
+bind();
+</script>
+<script>
+/* Student View: fixed video window that automatically follows the highlight.
+   The uploaded MP4 is analysed in the background (a hidden, muted copy is played fast and
+   the moving highlight is located frame-to-frame). That gives a time -> vertical-position
+   timeline, and the viewing position is derived from the video's currentTime, so it stays in
+   sync with play / pause / seek / restart. The MP4 itself is never modified. */
+(function(){
+ var V=document.getElementById('studentVideo'),BOX=document.getElementById('studentVideoBox');
+ if(!V||!BOX)return;
+ var STEP=0.1,AW=400,RATE=8,LEAD=0.4;
+ var tl=null,scan=null,token=0,target=0,jump=true,applied=-1,loopRows=null,pending=0,ticking=false,THR=0.03,EDGE=0.07;
+
+ /* Classify one frame-to-frame change (hist = changed pixels per row). Returns
+    {y,ry}  a localised highlight change (single band)
+    {ry,ev:1} highlight moved between rows (old cell cleared + new cell lit)
+    {ev:2}  page-wide / unclassified change, or null if nothing changed */
+ function classify(hist,cnt,aw,ah){
+  if(cnt<2)return null;
+  if(cnt>=aw*ah*0.12)return {ev:2};
+  var w=Math.max(2,Math.round(ah*0.12)),pre=new Uint32Array(ah+1),r,best=-1,bs=0;
+  for(r=0;r<ah;r++)pre[r+1]=pre[r]+hist[r];
+  for(r=0;r+w<=ah;r++)if(pre[r+w]-pre[r]>best){best=pre[r+w]-pre[r];bs=r}
+  function medRow(from){var half=(pre[Math.min(ah,from+w)]-pre[from])/2,acc=0,q=from;for(;q<from+w&&q<ah;q++){acc+=hist[q];if(acc>=half)break}return (q+0.5)/ah}
+  if(best>=cnt*0.6){var yy=medRow(bs);return {y:yy,ry:yy}}
+  var b2=-1,s2=0;for(r=0;r+w<=ah;r++)if(Math.abs(r-bs)>=w&&pre[r+w]-pre[r]>b2){b2=pre[r+w]-pre[r];s2=r}
+  if(b2>=cnt*0.25&&best>=cnt*0.25&&best+b2>=cnt*0.75){var ya=medRow(bs),yb=medRow(s2);return {ry:Math.max(ya,yb),ev:1,dy:Math.abs(ya-yb)}}
+  return {ev:2}}
+ function stopScan(){token++;if(scan){try{scan.pause();scan.removeAttribute('src');scan.load();scan.remove()}catch(e){}scan=null}}
+ function startScan(){
+  stopScan();var my=token;tl=null;
+  var dur=V.duration;if(!V.currentSrc||!isFinite(dur)||dur<=0)return;
+  var n=Math.ceil(dur/STEP)+2;tl={y:new Float32Array(n).fill(NaN),ry:new Float32Array(n).fill(NaN),dy:new Float32Array(n).fill(NaN),ev:new Uint8Array(n),n:n,found:0,done:false};
+  if(!('requestVideoFrameCallback' in HTMLVideoElement.prototype)){tl.done=true;return}
+  var s=document.createElement('video');scan=s;
+  s.muted=true;s.playsInline=true;s.setAttribute('playsinline','');s.preload='auto';
+  s.style.cssText='position:fixed;right:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none';
+  document.body.appendChild(s);
+  var cv=document.createElement('canvas'),cx,prev,aw,ah,last=-1,lastFollow=0;
+  function finish(){if(my!==token)return;tl.done=true;try{s.pause()}catch(e){}if(!V.paused)follow()}
+  function analyze(t){
+   cx.drawImage(s,0,0,aw,ah);var d=cx.getImageData(0,0,aw,ah).data,hist=new Uint32Array(ah),cnt=0,i,p,sum;
+   for(i=0,p=0;i<aw*ah;i++,p+=4){sum=d[p]+d[p+1]+d[p+2];if(last>=0&&Math.abs(sum-prev[i])>45){hist[(i/aw)|0]++;cnt++}prev[i]=sum}
+   if(last>=0){
+    var idx=Math.min(tl.n-1,Math.round(t/STEP)),c=classify(hist,cnt,aw,ah);
+    if(c){if(c.y!==undefined){tl.y[idx]=c.y;tl.found++}if(c.ry!==undefined)tl.ry[idx]=c.ry;if(c.dy!==undefined)tl.dy[idx]=c.dy;if(c.ev)tl.ev[idx]=c.ev}}
+   last=t}
+  function frame(now,meta){
+   if(my!==token)return;var t=meta.mediaTime;
+   if(last<0||t-last>=STEP-0.001)analyze(t);
+   if(now-lastFollow>500){lastFollow=now;if(!V.paused)follow()}
+   s.requestVideoFrameCallback(frame)}
+  s.addEventListener('loadedmetadata',function(){
+   if(my!==token)return;if(!s.videoWidth)return finish();
+   aw=AW;ah=Math.max(8,Math.round(AW*s.videoHeight/s.videoWidth));cv.width=aw;cv.height=ah;
+   cx=cv.getContext('2d',{willReadFrequently:true});prev=new Uint16Array(aw*ah);
+   s.playbackRate=RATE;s.requestVideoFrameCallback(frame);s.play().catch(finish)});
+  s.addEventListener('ended',finish);s.addEventListener('error',finish);
+  s.src=V.currentSrc}
+ /* highlight position (0..1 of video height) at media time t */
+ function yAt(t){
+  if(!tl)return null;
+  if(tl.found===0)return tl.done?Math.min(1,t/V.duration):null;   /* nothing detectable: plain time-proportional estimate */
+  var i=Math.max(0,Math.min(tl.n-1,Math.round(t/STEP))),got=[],k;
+  for(k=i;k>=0&&got.length<5;k--)if(tl.y[k]===tl.y[k])got.push(tl.y[k]);
+  if(!got.length)return null;got.sort(function(a,b){return a-b});return got[got.length>>1]}
+ function toTop(){target=0;jump=false;if(applied!==0||BOX.scrollTop>0){applied=0;BOX.scrollTo({top:0,behavior:'auto'})}}
+
+ /* ---- Row timing, derived from the same highlight timeline ----
+    Row N = the Nth row the highlight visits, in order. Each row starts when the highlight moves to a new
+    vertical position (confirmed by the following sample) and ends where the next row starts. */
+ function med(a){var b=a.slice().sort(function(x,y){return x-y});return b[b.length>>1]}
+ function buildRows(){
+  if(!tl)return null;
+  var S=[],i,rows=[],cur=null,prev=-1,q,idx,y,nx,b,k;
+  for(i=0;i<tl.n;i++)if(tl.ry[i]===tl.ry[i])S.push(i);
+  var dys=[];for(i=0;i<tl.n;i++)if(tl.dy[i]===tl.dy[i])dys.push(tl.dy[i]);
+  THR=dys.length>=2?Math.max(0.03,Math.min(0.10,0.4*med(dys))):0.03;   /* offsets smaller than 40% of the row spacing are the same row */
+  for(q=0;q<S.length;q++){
+   idx=S[q];y=tl.ry[idx];
+   if(!cur){cur={ys:[y],y:y,si:idx};rows.push(cur);prev=idx;continue}
+   if(Math.abs(y-cur.y)<=THR){cur.ys.push(y);cur.y=med(cur.ys);prev=idx;continue}
+   nx=S[q+1];if(nx===undefined||Math.abs(tl.ry[nx]-y)>THR)continue;   /* unconfirmed = noise */
+   b=idx;for(k=prev+1;k<=idx;k++)if(tl.ev[k]&&(idx-k)*STEP<=0.4){b=k;break}
+   cur={ys:[y],y:y,si:b};rows.push(cur);prev=idx}
+  var good=rows.filter(function(r,n){return r.ys.length>=((n===rows.length-1&&tl.done)?2:3)}),merged=[];
+  good.forEach(function(r){var m=merged[merged.length-1];if(m&&Math.abs(r.y-m.y)<=THR){m.ys=m.ys.concat(r.ys);m.y=med(m.ys)}else merged.push(r)});
+  rows=merged;
+  var dur=V.duration||0,last=-1;
+  /* typical note length = median gap between highlight changes */
+  var evT=[],lastI=-9,gaps=[],dcell=1;
+  for(i=0;i<S.length;i++){if(S[i]-lastI>3)evT.push(S[i]*STEP);lastI=S[i]}
+  for(i=1;i<evT.length;i++)gaps.push(evT[i]-evT[i-1]);
+  if(gaps.length>=3)dcell=med(gaps);
+  rows.forEach(function(r,n){var s=Math.max(0,r.si*STEP-EDGE);
+   if(n===0&&r.si*STEP<=1.6*dcell+0.2)s=0;      /* highlight was already on the first note at the start: Row 1 begins at 0:00 */
+   if(s<=last+0.05)s=last+0.05;r.s=s;last=s});
+  rows.forEach(function(r,n){r.e=n+1<rows.length?rows[n+1].s:dur;r.complete=n+1<rows.length||tl.done});
+  return rows}
+ function rowYAt(t){if(!loopRows)return null;for(var i=0;i<loopRows.length;i++)if(t>=loopRows[i].s&&t<loopRows[i].e)return loopRows[i].y;return null}
+ function parseRows(txt){
+  var m=String(txt||'').trim().match(/^(\d+)\s*(?:[-\u2013\u2014]|to)?\s*(\d+)?$/i);
+  if(!m)return null;var a=+m[1],b=m[2]===undefined?a:+m[2];
+  if(a<1||b<a)return null;return {a:a,b:b}}
+ function readout(t){var e=document.getElementById('sLoopReadout');if(e)e.textContent=t}
+ function loopBtn(t){var e=document.getElementById('sLoop');if(e)e.textContent=t}
+ function stopPending(){pending++}
+ function tick(){
+  if(!(studentState.loop&&studentState.end!=null)||V.paused){ticking=false;return}
+  if(V.currentTime>=studentState.end&&typeof V.ontimeupdate==='function'){
+   /* Frame-level guard: never allow the first frame of the row after the requested
+      range to become visible before jumping back to the loop start. */
+   V.currentTime=studentState.start;
+   if(testAudio.transpose!==0)audioStartAt(V,'student');
+   V.play().catch(function(){});
+  }
+  requestAnimationFrame(tick)}
+ function startTick(){if(!ticking){ticking=true;requestAnimationFrame(tick)}}
+
+ /* Frame-accurate start of a row: replay a short window around the coarse estimate and take the first frame
+    where the highlight lights up in that row's position. Falls back to the coarse time if nothing is found. */
+ function refineStart(rows,ri,cb){
+  var r=rows[ri];if(r.T!==undefined)return cb(r.T);
+  var tEst=r.s+EDGE,w0=Math.max(0,tEst-0.6),w1=tEst+0.08,done=false,rv=document.createElement('video');
+  function end(T){if(done)return;done=true;try{rv.pause();rv.removeAttribute('src');rv.load();rv.remove()}catch(e){}r.T=T;cb(T)}
+  rv.muted=true;rv.playsInline=true;rv.setAttribute('playsinline','');rv.preload='auto';
+  rv.style.cssText='position:fixed;right:0;bottom:0;width:2px;height:2px;opacity:.01;pointer-events:none';
+  document.body.appendChild(rv);
+  if(!('requestVideoFrameCallback' in HTMLVideoElement.prototype)||!V.currentSrc)return end(null);
+  var cv=document.createElement('canvas'),cx,prev,aw,ah,have=false;
+  function frame(now,meta){
+   if(done)return;var t=meta.mediaTime;
+   cx.drawImage(rv,0,0,aw,ah);var d=cx.getImageData(0,0,aw,ah).data,hist=new Uint32Array(ah),cnt=0,i,p,sum;
+   for(i=0,p=0;i<aw*ah;i++,p+=4){sum=d[p]+d[p+1]+d[p+2];if(have&&Math.abs(sum-prev[i])>45){hist[(i/aw)|0]++;cnt++}prev[i]=sum}
+   if(have&&cnt>=30){var c=classify(hist,cnt,aw,ah);if(c&&c.ry!==undefined&&Math.abs(c.ry-r.y)<=THR)return end(t)}
+   have=true;if(t>w1)return end(null);
+   rv.requestVideoFrameCallback(frame)}
+  rv.addEventListener('loadedmetadata',function(){
+   if(!rv.videoWidth)return end(null);
+   aw=AW;ah=Math.max(8,Math.round(AW*rv.videoHeight/rv.videoWidth));cv.width=aw;cv.height=ah;
+   cx=cv.getContext('2d',{willReadFrequently:true});prev=new Uint16Array(aw*ah);
+   rv.addEventListener('seeked',function(){if(done)return;rv.playbackRate=1;rv.requestVideoFrameCallback(frame);rv.play().catch(function(){end(null)})},{once:true});
+   rv.currentTime=w0});
+  rv.addEventListener('error',function(){end(null)});
+  setTimeout(function(){end(null)},6000);
+  rv.src=V.currentSrc}
+ function applyLoop(a,b,rows){
+  var st=a===1?rows[0].s:(rows[a-1].T!=null?Math.max(0,rows[a-1].T-0.02):rows[a-1].s);
+  /* The loop must end at the actual START of the first row outside the requested range.
+     Do not use the refined highlight time here: that can be slightly late and allow the
+     next row to become visibly active before the loop-back occurs. */
+  var en=b>=rows.length?(V.duration||rows[b-1].e):rows[b].s;
+  if(en<=st)en=rows[b-1].e;
+  try{console.info('Row loop',a+(a===b?'':'-'+b),'-> '+st.toFixed(2)+'s to '+en.toFixed(2)+'s | rows:',rows.map(function(r,n){return (n+1)+': '+r.s.toFixed(2)+'-'+r.e.toFixed(2)}).join(' | '))}catch(e){}
+  loopRows=rows;studentState.start=st;studentState.end=en;studentState.loop=true;
+  readout(a===b?'Loop: Row '+a:'Loop: Rows '+a+'\u2013'+b);loopBtn('\u21bb Loop ON');
+  V.currentTime=st;jump=true;
+  var p=(testAudio.transpose!==0)?syncPitchAudio(V,'student'):Promise.resolve();
+  p.then(function(){V.play().catch(function(){});startTick()})}
+ function tryLoop(a,b,my,first){
+  if(my!==pending)return;
+  var rows=buildRows();
+  if(!rows||!tl||(tl.done&&!rows.length)){readout('Loop: Off');return alert('Rows could not be detected in this lesson.')}
+  if(rows.length>=b&&rows[b-1].complete){
+   if(first)readout('Analysing lesson\u2026');
+   var need=[];if(a>1)need.push(a-1);if(b<rows.length)need.push(b);
+   var qi=0;(function nxt(){if(my!==pending)return;if(qi>=need.length)return applyLoop(a,b,rows);refineStart(rows,need[qi++],nxt)})();
+   return}
+  if(tl.done){readout('Loop: Off');return alert(rows.length?'Row '+(rows.length<b?b:a)+' was not found. This lesson has '+rows.length+' rows.':'Rows could not be detected in this lesson.')}
+  if(first)readout('Analysing lesson\u2026');
+  setTimeout(function(){tryLoop(a,b,my,false)},400)}
+ var LR=document.getElementById('sLoopRow'),RN=document.getElementById('sRowNum');
+ if(LR&&RN){
+  LR.addEventListener('click',function(){
+   if(!V.src)return alert('Select a video first.');
+   var pr=parseRows(RN.value);
+   if(!pr)return alert('Enter a row number such as 9, or a range such as 9-10.');
+   stopPending();tryLoop(pr.a,pr.b,pending,true)});
+  RN.addEventListener('keydown',function(e){if(e.key==='Enter')LR.click()});
+  document.getElementById('sClear').addEventListener('click',function(){stopPending();loopRows=null;RN.value=''});
+  V.addEventListener('play',startTick)}
+ function resetLoopUI(){stopPending();loopRows=null;if(RN)RN.value='';readout('Loop: Off');loopBtn('\u21bb Loop OFF')}
+ V.addEventListener('emptied',resetLoopUI);V.addEventListener('loadstart',resetLoopUI);
+ function follow(){
+  if(!tl||V.readyState<1)return;
+  var H=BOX.clientHeight,vh=V.clientHeight,max=BOX.scrollHeight-H;
+  if(max<=1){if(BOX.scrollTop)BOX.scrollTop=0;target=0;applied=-1;return}
+  if(V.currentTime<0.25){toTop();return}   /* at the very beginning: always the absolute top */
+  var t=Math.min(V.duration||0,V.currentTime+(V.paused?0:LEAD)),lp=loopRows&&studentState.loop&&studentState.end!=null,f;
+  if(lp){if(t>studentState.end-0.01)t=studentState.end-0.01;f=rowYAt(t)}
+  if(f==null||f===undefined)f=yAt(t);
+  if(f==null){jump=false;return}
+  var y=f*vh;target=Math.max(0,Math.min(max,target));
+  if(y<target+0.06*H||y>target+0.62*H||jump&&(y<target||y>target+H)){
+   var top=y-0.22*H;if(top<0.30*H)top=0;target=Math.max(0,Math.min(max,top))}
+  if(target!==applied||jump){applied=target;BOX.scrollTo({top:target,behavior:jump?'auto':'smooth'})}
+  jump=false}
+ function reset(){stopScan();tl=null;target=0;applied=-1;jump=true;BOX.scrollTop=0}
+ V.addEventListener('emptied',reset);V.addEventListener('loadstart',reset);
+ V.addEventListener('loadedmetadata',function(){reset();startScan();follow()});
+ V.addEventListener('seeking',function(){jump=true;if(V.currentTime<0.25)follow()});
+ V.addEventListener('seeked',follow);V.addEventListener('timeupdate',follow);V.addEventListener('play',follow);
+ window.addEventListener('resize',function(){jump=true;follow()});
+})();
+</script>
+<script>document.getElementById("testLogout").addEventListener("click",function(){closeTest();doLogout()})</script>
+</body>
+</html>
